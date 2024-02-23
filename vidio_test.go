@@ -63,7 +63,8 @@ func TestVideoFrame(t *testing.T) {
 	}
 	defer video.Close()
 
-	video.Read()
+	feed := video.Read()
+	assertEquals(t, feed, true)
 	// [203 222 134 255 203 222 134 255 203 222 134 255 203]
 	assertEquals(t, video.framebuffer[0], uint8(203))
 	assertEquals(t, video.framebuffer[1], uint8(222))

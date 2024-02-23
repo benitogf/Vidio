@@ -110,15 +110,9 @@ func NewVideo(filename string) (*Video, error) {
 	return streams[0], err
 }
 
-func isStream(url string) bool {
-	return strings.HasPrefix(url, "http://") ||
-		strings.HasPrefix(url, "https://") ||
-		strings.HasPrefix(url, "rtsp://")
-}
-
 // Read all video streams from the given file.
 func NewVideoStreams(filename string) ([]*Video, error) {
-	if !isStream(filename) && !exists(filename) {
+	if !exists(filename) {
 		return nil, fmt.Errorf("vidio: video file %s does not exist", filename)
 	}
 	// Check if ffmpeg and ffprobe are installed on the users machine.
@@ -210,7 +204,6 @@ func (video *Video) init() error {
 	// ffmpeg command to pipe video data to stdout in 8-bit RGBA format.
 	cmd := exec.Command(
 		"ffmpeg",
-		"-rtsp_transport", "tcp",
 		"-i", video.filename,
 		"-f", "image2pipe",
 		"-loglevel", "quiet",
