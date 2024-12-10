@@ -206,6 +206,8 @@ func (video *Video) init() error {
 		"ffmpeg",
 		"-i", video.filename,
 		"-f", "image2pipe",
+		"-tune", "zerolatency",
+		"-preset", "ultrafast",
 		"-loglevel", "quiet",
 		"-pix_fmt", "rgba",
 		"-vcodec", "rawvideo",
