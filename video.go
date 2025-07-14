@@ -404,6 +404,21 @@ func (video *Video) Close() {
 	}
 }
 
+func (video *Video) Reset() {
+	if !video.cleanupClosed {
+		video.cleanupClosed = true
+		video.closeCleanupChan <- struct{}{}
+		close(video.closeCleanupChan)
+	}
+	if video.pipe != nil {
+		video.pipe.Close()
+	}
+	if video.cmd != nil {
+		video.cmd.Wait()
+	}
+	video.cmd = nil
+}
+
 // Stops the "cmd" process running when the user presses Ctrl+C.
 // https://stackoverflow.com/questions/11268943/is-it-possible-to-capture-a-ctrlc-signal-and-run-a-cleanup-function-in-a-defe.
 func (video *Video) cleanup() {
